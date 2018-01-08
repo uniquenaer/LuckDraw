@@ -1,0 +1,124 @@
+< !doctype html >
+    <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>紫金橙</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        li {
+            list-style: none
+        }
+
+        input {
+            outline: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+    </style>
+</head>
+<body>
+<div id="fullpage">
+    <!-- 第二屏 -->
+    <div class="section second">
+        <div class="bg setting">
+            <div class="header">
+                <div class="main">
+                    <img src="./image/logo.jpeg" alt="">
+                    <span>紫金橙</span>
+
+                    <ul class="right">
+                        <li><label for="min">最小值：<input type="text" name="最小值" id="min" class="limit" placeholder="设置最小值" value="1"></label></li>
+                        <li><label for="max">最大值：<input type="text" name="最大值" id="max" class="limit" placeholder="设置最大值" value="100"></label></li>
+                        <!--<li><a href="javascript:;" class="ensure">确认</a></li>-->
+                    </ul>
+                </div>
+            </div>
+            <a href="javascript:;" class="luckdraw">抽 奖</a>
+            <div class="result">
+                <div id="num_0" class="num" data-id="0"><span
+                        style="transition: all 0.9s ease-in 0.1s; transform: translate3d(0px, 0px, 0px);"><i>0</i></span>
+                </div>
+                <div id="num_1" class="num" data-id="1"><span
+                        style="transition: all 0.9s ease-in 0.1s; transform: translate3d(0px, 0px, 0px);"><i>0</i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> <
+    script src = "./js/jquery.min.js" > < /script> <
+    script src = "./js/jquery.fullPage.min.js" > < /script> <
+    script >
+    $('#fullpage').fullpage({ // 设置背景色
+        afterLoad: function(anchorLink, index) {
+            $('.section').removeClass('current'); // 延时100毫秒执行
+            $('.section').eq(index - 1).addClass('current');
+        }
+    });
+$(function() {
+    var limitMin, limitMax;
+    $('.luckdraw').on('click', function() {
+        limitMin = parseInt($('#min').val()) || 1;
+        limitMax = parseInt($('#max').val()) || 100;
+        var random = null;
+
+        random = Math.floor(Math.random() * (limitMax - limitMin + 1) + limitMin);
+        play(random);
+    });
+
+    function play(num) {
+        var threshold = 10;
+        var html = '';
+        var arr = String(num).split('');
+        if (num < 10) {
+            arr.unshift(0)
+        }
+        var len = arr.length;
+        for (var i = 0; i < len; i++) {
+            if (arr[i] == '.') {
+                html += ".";
+                continue
+            }
+            html += '<div id="num_' + i + '"class="num" data-id="' + i + '">';
+            html += retuen10(threshold);
+            html += '</div>'
+        }
+        document.querySelector(".result").innerHTML = html;
+        var num = document.querySelectorAll(".num");
+        var spanHeight = num[0].querySelector('span').offsetHeight;
+        var numlen = num.length;
+        for (var j = 0; j < numlen; j++) {
+            var newi = document.createElement('i');
+            newi.innerHTML = arr[num[j].getAttribute("data-id")];
+            num[j].querySelector("span").appendChild(newi);
+            num[j].querySelector("span").style.webkitTransition = 'all ' + (.9 + j * .3) + 's ease-in .1s';
+            num[j].querySelector("span").style.webkitTransform = 'translate3d(0,-' + spanHeight + 'px, 0)';
+        }
+    }
+
+    function retuen10(num) {
+        var html = '';
+        html += "<span>";
+        for (var i = 0; i < num; i++) {
+            for (var j = 0; j < 10; j++) {
+                html += '<i>' + j + '</i>'
+            }
+        }
+        html += "</span>";
+        return html
+    }
+}); < /script>
